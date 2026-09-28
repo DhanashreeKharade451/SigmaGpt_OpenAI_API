@@ -1,11 +1,30 @@
 //This code is for Ollama
 
+import { response } from "express";
 import ollama from "ollama";
 
 const getOpenAIAPIResponse = async (message) => {
   try {
-  } catch {}
+    const response = await ollama.chat({
+      model: "llama3.2",
+      messages: [
+        {
+          role: "user",
+          content: message,
+        },
+      ],
+    });
+
+    console.log("Ollama response: ", response);
+
+    return response.message.content;
+  } catch (err) {
+    console.error("Ollama Response: ", err);
+    throw err;
+  }
 };
+
+export default getOpenAIAPIResponse;
 
 //******************************************************************************************************* */
 // //This Code is For OPENAI API response by Shradha
