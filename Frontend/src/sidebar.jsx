@@ -1,7 +1,7 @@
 import "./Sidebar.css";
 function Sidebar() {
   return (
-    <section class="sidebar">
+    <section className="sidebar">
       {/* new caht button */}
       <button>
         <img src="src/assets/blacklogo.png" alt="gpt logo" className="logo" />

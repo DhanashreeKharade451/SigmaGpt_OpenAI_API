@@ -1,6 +1,5 @@
 //This code is for Ollama
 
-import { response } from "express";
 import ollama from "ollama";
 
 const getOpenAIAPIResponse = async (message) => {
