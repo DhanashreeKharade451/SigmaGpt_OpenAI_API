@@ -29,8 +29,6 @@ function ChatWindow() {
       const res = await response.json();
       console.log(res);
       setReply(res.reply);
-
-      setReply(data.reply);
     } catch (err) {
       console.log(err);
     }
