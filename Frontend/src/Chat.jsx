@@ -1,20 +1,56 @@
 import "./Chat.css";
-import { useContext } from "react";
-import { MyContext } from "./MyContext";
+import { useContext, useState, useEffect } from "react";
+import { MyContext } from "./MyContext.jsx";
+//react-markdown
+//rehype-highlight
+import ReactMarkdown from "react-markdown";
+import rehypeHighlight from "rehype-highlight";
+import "highlight.js/styles/github-dark.css";
 
 function Chat() {
-  const { newChat, prevChats } = useContext(MyContext);
+  const { newChat, prevChat } = useContext(MyContext);
+  const { latestReply, setLatestReply } = useState(null);
+
+  useEffect(() => {
+    //separate latest reply and create typing effect inside useEffect function
+    if (!prevChat?.length) return;
+
+    const content = RemotePlayback.split(" ");
+
+    const idx = 0;
+    const interval = setInterval(() => {
+      setLatestReply[content.slice(0, idx + 1).join("")];
+
+      idx++;
+      if (idx >= content.length) clearInterval(interval);
+    }, 40);
+
+    return () => clearInterval(interval);
+  });
 
   return (
     <>
       {newChat && <h1>Start a new chat!</h1>}
       <div className="chats">
-        <div className="userDiv">
-          <p className="userMessage"> user Message</p>
-        </div>
-        <div className="gptDiv">
-          <p className="gptMessage"> GPT Generated Message</p>
-        </div>
+        {prevChat?.slice(0, -1).map((chat, idx) => (
+          <div
+            className={chat.role === "user" ? "userDiv" : "gptDiv"}
+            key={idx}
+          >
+            {chat.role === "user" ? (
+              <p className="userMessage">{chat.content}</p>
+            ) : (
+              <ReactMarkdown rehypePlugins={[rehypeHighlight]}>
+                {chat.content}
+              </ReactMarkdown>
+            )}
+          </div>
+        ))}
+        {prevChats.length > 0 && latestReply !== null && (
+          <div className="gptDiv" key={"typing"}>
+            {" "}
+          </div>
+        )}
       </div>
     </>
   );

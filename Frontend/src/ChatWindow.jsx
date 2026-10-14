@@ -1,13 +1,20 @@
 import "./ChatWindow.css";
 import Chat from "./Chat.jsx";
 import { MyContext } from "./MyContext.jsx";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { ScaleLoader } from "react-spinners";
 
 function ChatWindow() {
   // prompt should display in inputbox and both should display in chat as well
-  const { prompt, setPrompt, reply, setReply, currentThreadId } =
-    useContext(MyContext);
+  const {
+    prompt,
+    setPrompt,
+    reply,
+    setReply,
+    currentThreadId,
+    prevChat,
+    setPrevChat,
+  } = useContext(MyContext);
   const [loading, setLoading] = useState(false); //whaen we send prompt then it will be true and we can see loader until we get reply for our prompt . and we will make it true in function getReply
 
   const getReply = async () => {
@@ -35,6 +42,20 @@ function ChatWindow() {
     setLoading(false);
   };
 
+  //append new chat to previous chats
+  useEffect(() => {
+    if (prompt && reply) {
+      setPrevChat((prevChat) => [
+        ...prevChat,
+        { role: "user", content: prompt },
+        {
+          role: "assistant",
+          content: reply,
+        },
+      ]);
+    }
+    setPrompt("");
+  }, [reply]);
   return (
     <div className="chatWindow">
       <div className="navbar">
