@@ -8,31 +8,31 @@ import rehypeHighlight from "rehype-highlight";
 import "highlight.js/styles/github-dark.css";
 
 function Chat() {
-  const { newChat, prevChat } = useContext(MyContext);
-  const { latestReply, setLatestReply } = useState(null);
+  const { newChat, prevChats, reply } = useContext(MyContext);
+  const [latestReply, setLatestReply] = useState(null);
 
   useEffect(() => {
     //separate latest reply and create typing effect inside useEffect function
-    if (!prevChat?.length) return;
+    if (!prevChats?.length) return;
 
-    const content = RemotePlayback.split(" ");
+    const content = reply.split(" "); // here individual words get stored in content
 
-    const idx = 0;
+    let idx = 0;
     const interval = setInterval(() => {
-      setLatestReply[content.slice(0, idx + 1).join("")];
+      setLatestReply(content.slice(0, idx + 1).join(" "));
 
       idx++;
       if (idx >= content.length) clearInterval(interval);
-    }, 40);
+    }, 40); //40 milisecond is very small
 
     return () => clearInterval(interval);
-  });
+  }, [reply, prevChats]);
 
   return (
     <>
       {newChat && <h1>Start a new chat!</h1>}
       <div className="chats">
-        {prevChat?.slice(0, -1).map((chat, idx) => (
+        {prevChats?.slice(0, -1).map((chat, idx) => (
           <div
             className={chat.role === "user" ? "userDiv" : "gptDiv"}
             key={idx}
@@ -48,7 +48,9 @@ function Chat() {
         ))}
         {prevChats.length > 0 && latestReply !== null && (
           <div className="gptDiv" key={"typing"}>
-            {" "}
+            <ReactMarkdown rehypePlugins={[rehypeHighlight]}>
+              {latestReply}
+            </ReactMarkdown>
           </div>
         )}
       </div>

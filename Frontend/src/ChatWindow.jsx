@@ -12,8 +12,8 @@ function ChatWindow() {
     reply,
     setReply,
     currentThreadId,
-    prevChat,
-    setPrevChat,
+    prevChats,
+    setPrevChats,
   } = useContext(MyContext);
   const [loading, setLoading] = useState(false); //whaen we send prompt then it will be true and we can see loader until we get reply for our prompt . and we will make it true in function getReply
 
@@ -45,7 +45,7 @@ function ChatWindow() {
   //append new chat to previous chats
   useEffect(() => {
     if (prompt && reply) {
-      setPrevChat((prevChat) => [
+      setPrevChats((prevChat) => [
         ...prevChat,
         { role: "user", content: prompt },
         {
